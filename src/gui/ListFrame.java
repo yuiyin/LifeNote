@@ -22,12 +22,14 @@ import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 
-import core.DiaryManager;
 import util.SortType;
 import util.Utility;
-import data.DetailedDiary;
-import data.SimpleDiary;
-import event.ListClickEvent;
+import data.DiaryManager;
+import data.event.ListClickEvent;
+import data.model.DetailedDiary;
+import data.model.SimpleDiary;
+import gui.cuscomp.ListElementPanel;
+import gui.cusui.CustomScrollBarUI;
 
 @SuppressWarnings("serial")
 public class ListFrame extends JFrame implements ActionListener, Observer{

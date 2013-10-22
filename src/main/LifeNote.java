@@ -1,6 +1,6 @@
 package main;
 
-import core.DiaryManager;
+import data.DiaryManager;
 import gui.StartFrame;
 
 public class LifeNote {

@@ -10,8 +10,8 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import event.TaskFinishEvent;
-import event.UpdateProgressEvent;
+import data.event.TaskFinishEvent;
+import data.event.UpdateProgressEvent;
 import util.Utility;
 
 //Welcome window with a progress bar showing data loading

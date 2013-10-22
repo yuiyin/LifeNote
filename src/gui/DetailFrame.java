@@ -1,5 +1,7 @@
 package gui;
 
+import gui.cusui.CustomScrollBarUI;
+
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -25,9 +27,9 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.text.StyledDocument;
 
 import util.Utility;
-import core.DiaryManager;
-import core.VoiceManager;
-import data.DetailedDiary;
+import data.DiaryManager;
+import data.VoiceManager;
+import data.model.DetailedDiary;
 
 @SuppressWarnings("serial")
 public class DetailFrame extends JFrame implements ActionListener {
