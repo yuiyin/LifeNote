@@ -41,6 +41,11 @@ public class DetailedDiary {
 	}
 
 	public void setTitle(String title) {
+		try {
+			assert title.length() <= 20 : "Length of title exceed 20";
+		} catch (AssertionError e) {
+			e.printStackTrace();
+		}
 		this.title = title;
 	}
 
@@ -49,6 +54,11 @@ public class DetailedDiary {
 	}
 
 	public void setTag(String tag) {
+		try {
+			assert tag.length() <= 10 : "Length of tag exceed 10";
+		} catch (AssertionError e) {
+			e.printStackTrace();
+		}
 		this.tag = tag;
 	}
 

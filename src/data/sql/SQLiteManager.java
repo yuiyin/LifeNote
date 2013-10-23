@@ -152,10 +152,17 @@ public class SQLiteManager implements IDatabaseManager {
 					query += "time <= " + endTime;
 			}
 			
+			String sort = "";
+			switch (sortType) {
+			case SORT_BY_TIME : sort = "time";
+			case SORT_BY_TAG  : sort = "tag";
+			case SORT_BY_TITLE: sort = "title";
+			}
+
 			if (!query.equals(""))
-				query = "SELECT * FROM diary WHERE " + query + " ORDER BY time;";
+				query = "SELECT * FROM diary WHERE " + query + " ORDER BY " + sort + ";";
 			else
-				query = "SELECT * FROM diary ORDER BY time;";
+				query = "SELECT * FROM diary ORDER BY " + sort + ";";
 			System.out.println(query);
 			
 			ResultSet rs = stmt.executeQuery(query);

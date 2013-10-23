@@ -168,6 +168,12 @@ public class ListFrame extends JFrame implements ActionListener, Observer{
 				pContainer.add(bEndTime);
 				searching = true;
 			} else {
+				try {
+					assert tfTitle.getText().length() <= 20 : "Length of title exceed 20";
+					assert tfTag.getText().length() <= 10 : "Length of tag exceed 10";
+				} catch (AssertionError err) {
+					err.printStackTrace();
+				}
 				DiaryManager.getInstance().loadDiaryList(tfTitle.getText(), tfTag.getText(), Utility.restoreFormattedTime(bStartTime.getText()), Utility.restoreFormattedTime(bEndTime.getText()), SortType.SORT_BY_TIME);
 				dispose();
 				ListFrame window = new ListFrame();

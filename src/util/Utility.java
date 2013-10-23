@@ -61,6 +61,20 @@ public class Utility {
 		s = s.replace("/", "");
 		s = s.replace(" ", "");
 		s = s.replace(":", "");
+		try {
+		assert s.length() == 12 && 
+				Long.valueOf(s.substring(0,4)) >= 1000 &&
+				Long.valueOf(s.substring(4,6)) > 0 &&
+				Long.valueOf(s.substring(4,6)) <= 12 &&
+				Long.valueOf(s.substring(6,8)) >= 0 && 
+				Long.valueOf(s.substring(6,8)) < 24 && 
+				Long.valueOf(s.substring(8,10)) >= 0 &&
+				Long.valueOf(s.substring(8,10)) < 60 &&
+				Long.valueOf(s.substring(10,12)) >= 0 &&
+				Long.valueOf(s.substring(10,12)) < 60 : "Wrong date format";
+		} catch (AssertionError e) {
+			e.printStackTrace();
+		}
 		return Long.valueOf(s).longValue();
 	}
 	
