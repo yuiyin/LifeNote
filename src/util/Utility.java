@@ -20,6 +20,7 @@ public class Utility {
 	public static final String LIST_FRAME_CREATE = "./res/icon/4.png";
 	public static final String LIST_FRAME_SEARCH = "./res/icon/5.png";
 	public static final String LIST_FRAME_EXIT = "./res/icon/6.png";
+	public static final String LIST_FRAME_REFRESH = "./res/icon/17.png";
 	public static final String LIST_FRAME_FONT = "Î¢ÈíÑÅºÚ";
 	public static final Color LIST_FRAME_FONT_COLOR = new Color(0, 0, 56);
 
