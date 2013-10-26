@@ -107,6 +107,10 @@ public class DiaryManager {
 		dbManager.setDiary(dd, false);
 	}
 	
+	public void saveUpdate(DetailedDiary dd) {
+		saveDiary(dd);
+	}
+	
 	public void saveCreate(DetailedDiary dd) {
 		saveDiary(dd);
 	}

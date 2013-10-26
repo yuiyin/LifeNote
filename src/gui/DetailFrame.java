@@ -388,7 +388,7 @@ public class DetailFrame extends JFrame implements ActionListener {
 			if (isCreate) {
 				DiaryManager.getInstance().saveCreate(dd);
 			} else {
-				DiaryManager.getInstance().saveDiary(dd);
+				DiaryManager.getInstance().saveUpdate(dd);
 			}
 			refresh(false);
 		} else if (o == bCancel) {
@@ -414,7 +414,7 @@ public class DetailFrame extends JFrame implements ActionListener {
 			lTag.setText("From " + dd.getUsername() + "(" + dd.getShareOrPrivate() + ")    Tag :");
 		} else if (o == bComment) {
 			String comment = tfComment.getText();
-			comment = DiaryManager.getInstance().getUser().getUsername() + " : " + comment + "\n";
+			comment = "\n" + DiaryManager.getInstance().getUser().getUsername() + " : " + comment;
 			dd.setComment(dd.getComment() + comment);
 			DiaryManager.getInstance().saveComment(dd);
 		}

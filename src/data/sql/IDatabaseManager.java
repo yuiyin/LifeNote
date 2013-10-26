@@ -15,5 +15,5 @@ public interface IDatabaseManager {
 	public ArrayList<SimpleDiary> getDiaryList(String title, String tag, long startTime, long endTime, SortType sortType, String user);
 	public DetailedDiary getDiary(int id);
 	public void setDiary(DetailedDiary diary, boolean isDeletion);
-	public void writeLog(long time, String type, String message);
+	public void writeLog(String time, String type, String message);
 }

@@ -321,7 +321,7 @@ public class SQLiteManager implements IDatabaseManager {
 	}
 
 	@Override
-	public void writeLog(long time, String type, String message) {
+	public void writeLog(String time, String type, String message) {
 		try {
 			Class.forName("org.sqlite.JDBC");
 		} catch (ClassNotFoundException e) {
@@ -334,7 +334,7 @@ public class SQLiteManager implements IDatabaseManager {
 			conn.setAutoCommit(false);
 			Statement stmt = conn.createStatement();
 			
-			String query = "INSERT INTO log VALUES (" + time + ", '" + type + "', '" + message + "');";
+			String query = "INSERT INTO log VALUES ('" + time + "', '" + type + "', '" + message + "');";
 			System.out.println(query);
 			
 			stmt.executeUpdate(query);
