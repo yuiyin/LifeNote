@@ -1,5 +1,6 @@
 package data.model;
 
+import data.DiaryManager;
 import util.Utility;
 
 public class DetailedDiary {
@@ -9,6 +10,8 @@ public class DetailedDiary {
 	private long time;
 	private String contentURL;
 	private String voiceURL;
+	private String username;
+	private String shareOrPrivate;
 	
 	public DetailedDiary() {
 		this.id = Utility.generateRandomID();
@@ -17,15 +20,19 @@ public class DetailedDiary {
 		this.time = Utility.getTime();
 		this.contentURL = "./diary/content/" + id;
 		this.voiceURL = "";
+		this.username = DiaryManager.getInstance().getUser().getUsername();
+		this.shareOrPrivate = "private";
 	}
 	
-	public DetailedDiary(int id, String title, String tag, long time, String content, String voiceURL) {
+	public DetailedDiary(int id, String title, String tag, long time, String content, String voiceURL, String username, String shareOrPrivate) {
 		this.id = id;
 		this.title = title;
 		this.tag = tag;
 		this.time = time;
 		this.contentURL = content;
 		this.voiceURL = voiceURL;
+		this.username = username;
+		this.shareOrPrivate = shareOrPrivate;
 	}
 
 	public int getId() {
@@ -79,6 +86,22 @@ public class DetailedDiary {
 		this.voiceURL = voiceURL;
 	}
 	
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+	public String getShareOrPrivate() {
+		return shareOrPrivate;
+	}
+
+	public void setShareOrPrivate(String shareOrPrivate) {
+		this.shareOrPrivate = shareOrPrivate;
+	}
+
 	public boolean hasVoice() {
 		if (voiceURL == null)
 			return false;

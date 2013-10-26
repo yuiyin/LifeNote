@@ -15,6 +15,12 @@ public class Utility {
 	public static final String START_FRAME_BACKGROUND = "./res/background/1.jpg";
 	public static final String START_FRAME_INFO = "LifeNote is starting ";
 	public static final String TITLE_FONT = "Segoe Script";
+	public static final String TITLE_CONTENT_FONT = "Î¢ÈíÑÅºÚ";
+	public static final Color START_FRAME_FONT_COLOR = new Color(0, 0, 56);
+	public static final Color START_FRAME_HINT_COLOR = new Color(85, 93, 94);
+	public static final Color START_FRAME_BORDER_COLOR = new Color(149, 165, 166);
+	public static final String START_FRAME_SIGNIN = "./res/icon/18.png";
+	public static final String START_FRAME_REGISTER = "./res/icon/19.png";
 
 	public static final String LIST_FRAME_BACKGROUND = "./res/background/1.jpg";
 	public static final String LIST_FRAME_CREATE = "./res/icon/4.png";
@@ -42,6 +48,8 @@ public class Utility {
 	public static final String DETAIL_FRAME_VOICEOFF = "./res/icon/14.png";
 	public static final String DETAIL_FRAME_SAVE = "./res/icon/15.png";
 	public static final String DETAIL_FRAME_CANCEL = "./res/icon/16.png";
+	public static final String DETAIL_FRAME_SHARE = "./res/icon/20.png";
+	public static final String DETAIL_FRAME_PRIVATE = "./res/icon/21.png";
 
 	public static int generateRandomID() {
 		int id = (int) (Integer.MAX_VALUE * Math.random());

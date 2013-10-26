@@ -10,9 +10,6 @@ public class LifeNote {
 		StartFrame window = new StartFrame();
 		window.setVisible(true);
 		//Initialize data manager
-		DiaryManager.getInstance().init();
-		DiaryManager.getInstance().addObserver(window);
-		//Load diary data
-		DiaryManager.getInstance().loadData();
+		DiaryManager.getInstance().init(window);
 	}
 }

@@ -54,6 +54,8 @@ public class DetailFrame extends JFrame implements ActionListener {
 	private JButton bVoiceoff;
 	private JButton bSave;
 	private JButton bCancel;
+	private JButton bShare;
+	private JButton bPrivate;
 
 	private DetailedDiary dd;
 	private boolean voiceWorking = false;
@@ -95,13 +97,13 @@ public class DetailFrame extends JFrame implements ActionListener {
 		setStyle(bTime);
 		bTime.addActionListener(this);
 
-		lTag = new JLabel("Tag :");
-		lTag.setBounds(101, 135, 59, 26);
+		lTag = new JLabel("From " + dd.getUsername() + "(" + dd.getShareOrPrivate() + ")    Tag :");
+		lTag.setBounds(101, 135, 259, 26);
 		setStyle(lTag);
 		pContainer.add(lTag);
 
 		tfTag = new JTextField(dd.getTag());
-		tfTag.setBounds(160, 135, 340, 26);
+		tfTag.setBounds(360, 135, 140, 26);
 		setStyle(tfTag);
 		pContainer.add(tfTag);
 
@@ -167,6 +169,18 @@ public class DetailFrame extends JFrame implements ActionListener {
 		setStyle(bCancel);
 		bCancel.addActionListener(this);
 
+		bShare = new JButton(new ImageIcon(Utility.DETAIL_FRAME_SHARE));
+		bShare.setBounds(609, 110, 51, 51);
+		setStyle(bShare);
+		bShare.addActionListener(this);
+		pContainer.add(bShare);
+
+		bPrivate = new JButton(new ImageIcon(Utility.DETAIL_FRAME_PRIVATE));
+		bPrivate.setBounds(609, 110, 51, 51);
+		setStyle(bPrivate);
+		bPrivate.addActionListener(this);
+		pContainer.add(bPrivate);
+		
 		setEditable(editable);
 	}
 
@@ -178,7 +192,7 @@ public class DetailFrame extends JFrame implements ActionListener {
 		setTextPane(dd.getContentURL());
 		setEditable(editable);
 	}
-	
+
 	private void setStyle(JComponent c) {
 		c.setOpaque(false);
 		c.setFont(new Font(Utility.DETAIL_FRAME_FONT, 0, 20));
@@ -186,7 +200,7 @@ public class DetailFrame extends JFrame implements ActionListener {
 		c.setBackground(new Color(0, 0, 0, 0));
 		c.setBorder(null);
 	}
-	
+
 	private void setEditable(boolean editable) {
 		tfTitle.setEditable(editable);
 		tfTag.setEditable(editable);
@@ -208,6 +222,11 @@ public class DetailFrame extends JFrame implements ActionListener {
 			pContainer.remove(bEdit);
 			pContainer.remove(bDelete);
 			pContainer.remove(bBack);
+			if (dd.getShareOrPrivate().equals("share")) {
+				pContainer.add(bPrivate);
+			} else if (dd.getShareOrPrivate().equals("private")) {
+				pContainer.add(bShare);
+			}
 		} else {
 			pContainer.add(lTime);
 			pContainer.remove(bTime);
@@ -225,6 +244,8 @@ public class DetailFrame extends JFrame implements ActionListener {
 			pContainer.add(bEdit);
 			pContainer.add(bDelete);
 			pContainer.add(bBack);
+			pContainer.remove(bShare);
+			pContainer.remove(bPrivate);
 		}
 		repaint();
 	}
@@ -240,7 +261,7 @@ public class DetailFrame extends JFrame implements ActionListener {
 			e.printStackTrace();
 		}
 	}
-	
+
 	private void saveTextPane(String url) {
 		try {
 			FileOutputStream fos = new FileOutputStream(url);
@@ -330,6 +351,16 @@ public class DetailFrame extends JFrame implements ActionListener {
 			} else {				
 				refresh(false);
 			}
+		} else if (o == bShare) {
+			dd.setShareOrPrivate("share");
+			pContainer.remove(bShare);
+			pContainer.add(bPrivate);
+			lTag.setText("From " + dd.getUsername() + "(" + dd.getShareOrPrivate() + ")    Tag :");
+		} else if (o == bPrivate) {
+			dd.setShareOrPrivate("private");
+			pContainer.remove(bPrivate);
+			pContainer.add(bShare);
+			lTag.setText("From " + dd.getUsername() + "(" + dd.getShareOrPrivate() + ")    Tag :");
 		}
 		repaint();
 	}

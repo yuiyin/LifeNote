@@ -11,61 +11,14 @@ import util.SortType;
 import util.Utility;
 import data.model.DetailedDiary;
 import data.model.SimpleDiary;
+import data.model.User;
 
 public class SQLiteManager implements IDatabaseManager {
 	
 	private String url = Utility.SQL_URL;
 	
 	public static void main(String[] args) {
-//		// 加载驱动
-//		try {
-//			Class.forName("org.sqlite.JDBC");
-//		} catch (ClassNotFoundException e) {
-//			// TODO Auto-generated catch block
-//			// e.printStackTrace();
-//			System.out.println("数据库驱动未找到!");
-//		}
-//		// 得到连接 会在你所填写的目录建一个你命名的文件数据库
-//		Connection conn;
-//		try {
-//			conn = DriverManager.getConnection("jdbc:sqlite:./diary/test.db",null,null);
-//			// 设置自动提交为false
-//			conn.setAutoCommit(false);
-//			Statement stmt = conn.createStatement();
-//
-//			//判断表是否存在
-//			ResultSet rsTables = conn.getMetaData().getTables(null, null, "student", null);
-//			if(rsTables.next()){
-//				System.out.println("表存在,创建表的事情不要做了");
-//			} else {
-//				stmt.executeUpdate("create table student (id,name);");
-//			}
-//
-//			stmt.executeUpdate("insert into student values (1,'hehe');");
-//			stmt.executeUpdate("insert into student values (2,'xixi');");
-//			stmt.executeUpdate("insert into student values (3,'haha');");
-//			// 提交
-//			conn.commit();
-//			// 得到结果集
-//			ResultSet rs = stmt.executeQuery("select * from student;");
-//			while (rs.next()) {
-//				System.out.println("id = " + rs.getString("id"));
-//				System.out.println("name = " + rs.getString("name"));
-//			}
-//			rs.close();
-//			conn.close();
-//		} catch (SQLException e) {
-//			e.printStackTrace();
-//			System.out.println("SQL异常!");
-//		}
-		SQLiteManager m = new SQLiteManager();
-		//m.init(Utility.SQL_URL, "", "");
-		m.getDiaryList(null, null, 201310102151L, 201310102152L, null);
-		DetailedDiary dd = m.getDiary(123456789);
-		dd.setTime(201310120000L);
-		m.setDiary(dd, false);
-		m.setDiary(new DetailedDiary(423456789, "title4", "4", 201310111100L, "./diary/content/123456789", ""), false);
-		m.getDiaryList(null, null, 0, 0, null);
+
 	}
 
 	@Override
@@ -87,7 +40,7 @@ public class SQLiteManager implements IDatabaseManager {
 			if(rsTables.next()){
 				System.out.println("表存在,创建表的事情不要做了");
 			} else {
-				stmt.executeUpdate("CREATE TABLE diary (id,title,tag,time,content,voice);");
+				stmt.executeUpdate("CREATE TABLE diary (id,title,tag,time,content,voice,user,share);");
 			}
 
 //			stmt.executeUpdate("insert into diary values (123456789, 'title1', '1', 201310102151, './diary/content/123456789', './diary/voice/123456789');");
@@ -95,6 +48,19 @@ public class SQLiteManager implements IDatabaseManager {
 //			stmt.executeUpdate("insert into diary values (323456789, 'title3', '3', 201310102153, './diary/content/323456789', '');");
 			// 提交
 			conn.commit();
+			
+			rsTables = conn.getMetaData().getTables(null, null, "user", null);
+			if(rsTables.next()){
+				System.out.println("表存在,创建表的事情不要做了");
+			} else {
+				stmt.executeUpdate("CREATE TABLE user (id,username,password);");
+			}
+//			stmt.executeUpdate("insert into user values (123456789, 'user1', '123');");
+//			stmt.executeUpdate("insert into user values (223456789, 'user2', '123');");
+//			stmt.executeUpdate("insert into user values (323456789, 'user3', '123');");
+			// 提交
+			conn.commit();
+			
 			// 得到结果集
 			ResultSet rs = stmt.executeQuery("SELECT * FROM diary;");
 			while (rs.next()) {
@@ -104,6 +70,14 @@ public class SQLiteManager implements IDatabaseManager {
 				System.out.println("time = " + rs.getString("time"));
 				System.out.println("content = " + rs.getString("content"));
 				System.out.println("voice = " + rs.getString("voice"));
+				System.out.println("user = " + rs.getString("user"));
+				System.out.println("share = " + rs.getString("share"));
+			}
+			rs = stmt.executeQuery("SELECT * FROM user;");
+			while (rs.next()) {
+				System.out.println("id = " + rs.getString("id"));
+				System.out.println("username = " + rs.getString("username"));
+				System.out.println("password = " + rs.getString("password"));
 			}
 			rs.close();
 			conn.close();
@@ -113,10 +87,77 @@ public class SQLiteManager implements IDatabaseManager {
 		}
 		this.url = url;
 	}
+	
+	@Override
+	public User getUser(String username, String password) {
+		try {
+			Class.forName("org.sqlite.JDBC");
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+		Connection conn;
+		User ret = null;
+		try {
+			conn = DriverManager.getConnection(url, null, null);
+			// 设置自动提交为false
+			conn.setAutoCommit(false);
+			Statement stmt = conn.createStatement();
+			
+			String query = "SELECT * FROM user WHERE username = '" + username + "' AND password = '" + password + "';";
+			
+			ResultSet rs = stmt.executeQuery(query);
+			while (rs.next()) {
+				ret = new User(Integer.valueOf(rs.getString("id")).intValue(), rs.getString("username"));
+			}
+			
+			rs.close();
+			conn.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return ret;
+	}
+	
+	@Override
+	public User setUser(int id, String username, String password) {
+		try {
+			Class.forName("org.sqlite.JDBC");
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+		Connection conn;
+		User ret = null;
+		try {
+			conn = DriverManager.getConnection(url, null, null);
+			// 设置自动提交为false
+			conn.setAutoCommit(false);
+			Statement stmt = conn.createStatement();
+			
+			String query = "SELECT * FROM user WHERE username = '" + username + "';";
+			
+			ResultSet rs = stmt.executeQuery(query);
+			if (rs.next()) {
+				rs.close();
+				conn.close();
+				return ret;
+			}
+			
+			query = "INSERT INTO user VALUES (" + id + ", '" + username + "', '" + password +"');";
+			stmt.executeUpdate(query);
+			conn.commit();
+			ret = new User(id, username);
+			
+			rs.close();
+			conn.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return ret;
+	}
 
 	@Override
 	public ArrayList<SimpleDiary> getDiaryList(String title, String tag,
-			long startTime, long endTime, SortType sortType) {
+			long startTime, long endTime, SortType sortType, String user) {
 		try {
 			Class.forName("org.sqlite.JDBC");
 		} catch (ClassNotFoundException e) {
@@ -151,6 +192,12 @@ public class SQLiteManager implements IDatabaseManager {
 				else
 					query += "time <= " + endTime;
 			}
+			if (user != null && !user.equals("")) {
+				if (!query.equals(""))
+					query += " AND (" + "user = '" + user + "' OR share = 'share')";
+				else
+					query += "user = '" + user + "' OR share = 'share'";
+			}
 			
 			if (!query.equals(""))
 				query = "SELECT * FROM diary WHERE " + query + " ORDER BY time;";
@@ -160,12 +207,6 @@ public class SQLiteManager implements IDatabaseManager {
 			
 			ResultSet rs = stmt.executeQuery(query);
 			while (rs.next()) {
-				System.out.println("id = " + rs.getString("id"));
-				System.out.println("title = " + rs.getString("title"));
-				System.out.println("tag = " + rs.getString("tag"));
-				System.out.println("time = " + rs.getString("time"));
-				System.out.println("content = " + rs.getString("content"));
-				System.out.println("voice = " + rs.getString("voice"));
 				int id = Integer.valueOf(rs.getString("id")).intValue();
 				String title_ = rs.getString("title");
 				String tag_ = rs.getString("tag");
@@ -201,19 +242,15 @@ public class SQLiteManager implements IDatabaseManager {
 			
 			ResultSet rs = stmt.executeQuery(query);
 			while (rs.next()) {
-				System.out.println("id = " + rs.getString("id"));
-				System.out.println("title = " + rs.getString("title"));
-				System.out.println("tag = " + rs.getString("tag"));
-				System.out.println("time = " + rs.getString("time"));
-				System.out.println("content = " + rs.getString("content"));
-				System.out.println("voice = " + rs.getString("voice"));
 				int id_ = Integer.valueOf(rs.getString("id")).intValue();
 				String title = rs.getString("title");
 				String tag = rs.getString("tag");
 				long time = Long.valueOf(rs.getString("time")).longValue();
 				String contentURL = rs.getString("content");
 				String voiceURL = rs.getString("voice");
-				ret = new DetailedDiary(id_, title, tag, time, contentURL, voiceURL);
+				String username = rs.getString("user");
+				String shareOrPrivate = rs.getString("share");
+				ret = new DetailedDiary(id_, title, tag, time, contentURL, voiceURL, username, shareOrPrivate);
 			}
 			rs.close();
 			conn.close();
@@ -250,7 +287,9 @@ public class SQLiteManager implements IDatabaseManager {
 				query += "'" + diary.getTag() + "', ";
 				query += diary.getTime() + ", ";
 				query += "'" + diary.getContentURL() + "', ";
-				query += "'" + diary.getVoiceURL() + "');";
+				query += "'" + diary.getVoiceURL() + "', ";
+				query += "'" + diary.getUsername() + "', ";
+				query += "'" + diary.getShareOrPrivate() + "');";
 				System.out.println(query);
 				
 				stmt.executeUpdate(query);

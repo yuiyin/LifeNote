@@ -9,6 +9,7 @@ import data.event.TaskFinishEvent;
 import data.event.UpdateProgressEvent;
 import data.model.DetailedDiary;
 import data.model.SimpleDiary;
+import data.model.User;
 import data.sql.IDatabaseManager;
 import data.sql.SQLiteManager;
 
@@ -20,6 +21,7 @@ public class DiaryManager {
 	private DetailedDiary detailedDiary = null;
 	private IDatabaseManager dbManager = null;
 	private ProgressUpdater progressUpdater = null;
+	private User currentUser = null;
 	
 	private DiaryManager() {
 		
@@ -33,28 +35,43 @@ public class DiaryManager {
 	}
 	
 	//Initialize
-	public void init() {
-		diaryList = new ArrayList<SimpleDiary>();
+	public void init(Observer observer) {
 		dbManager = new SQLiteManager();
-		dbManager.init(Utility.SQL_URL, Utility.SQL_USER, Utility.SQL_PASSWORD);
 		progressUpdater = new ProgressUpdater();
-	}
-	
-	//Load data from database and get list of simple information of diary
-	public void loadData() {
-		//Start a thread to update progress bar
+		progressUpdater.addObserver(observer);
+		
 		Thread t = new Thread(progressUpdater);
 		t.start();
 		
-		diaryList = dbManager.getDiaryList(null, null, -1, -1, SortType.SORT_BY_TIME);
+		dbManager.init(Utility.SQL_URL, Utility.SQL_USER, Utility.SQL_PASSWORD);
 		try {
 			Thread.sleep(2000);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
 		
-		//Stop the thread updating progress bar
 		progressUpdater.stop();
+	}
+	
+	public boolean signin(String username, String password) {
+		currentUser = dbManager.getUser(username, password);
+		if (currentUser == null) {
+			return false;
+		} else
+			return true;
+	}
+	
+	public boolean register(String username, String password) {
+		currentUser = dbManager.setUser(Utility.generateRandomID(), username, password);
+		if (currentUser == null) {
+			return false;
+		} else {
+			return true;
+		}
+	}
+	
+	public User getUser() {
+		return currentUser;
 	}
 	
 	public void addObserver(Observer observer) {
@@ -66,7 +83,7 @@ public class DiaryManager {
 	}
 	
 	public void loadDiaryList(String title, String tag, long startTime, long endTime, SortType sortType) {
-		diaryList = dbManager.getDiaryList(title, tag, startTime, endTime, sortType);
+		diaryList = dbManager.getDiaryList(title, tag, startTime, endTime, sortType, currentUser.getUsername());
 	}
 	
 	public ArrayList<SimpleDiary> getDiaryList() {
