@@ -45,8 +45,9 @@ public aspect LogAspect {
 			index = 0;
 		String lastComment = comment.substring(index, comment.length());
 		StringBuilder builder = new StringBuilder();
-		builder.append("用户").append(DiaryManager.getInstance().getUser().getUsername()).append("评论用户")
-				.append(diary.getUsername()).append("的日志：")
+		builder.append("用户")
+				.append(DiaryManager.getInstance().getUser().getUsername())
+				.append("评论用户").append(diary.getUsername()).append("的日志：")
 				.append(diary.getTitle()).append("。内容为：").append(lastComment);
 		dbm.writeLog(getCurrentTime(), COMMENT_LOG, builder.toString());
 	}
@@ -57,7 +58,7 @@ public aspect LogAspect {
 				.append(diary.getId()).append("-").append(diary.getTitle());
 		dbm.writeLog(getCurrentTime(), DIARY_LOG, builder.toString());
 	}
-	
+
 	after() throwing (Exception e): allCall() {
 		dbm.writeLog(getCurrentTime(), EXCEPTION_LOG, e.getMessage());
 	}
