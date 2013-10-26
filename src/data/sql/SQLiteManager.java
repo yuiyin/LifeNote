@@ -61,6 +61,15 @@ public class SQLiteManager implements IDatabaseManager {
 			// 提交
 			conn.commit();
 			
+			rsTables = conn.getMetaData().getTables(null, null, "log", null);
+			if(rsTables.next()){
+				System.out.println("表存在,创建表的事情不要做了");
+			} else {
+				stmt.executeUpdate("CREATE TABLE log (time,type,message);");
+			}
+			// 提交
+			conn.commit();
+			
 			// 得到结果集
 			ResultSet rs = stmt.executeQuery("SELECT * FROM diary;");
 			while (rs.next()) {
@@ -79,6 +88,12 @@ public class SQLiteManager implements IDatabaseManager {
 				System.out.println("id = " + rs.getString("id"));
 				System.out.println("username = " + rs.getString("username"));
 				System.out.println("password = " + rs.getString("password"));
+			}
+			rs = stmt.executeQuery("SELECT * FROM log;");
+			while (rs.next()) {
+				System.out.println("time = " + rs.getString("time"));
+				System.out.println("type = " + rs.getString("type"));
+				System.out.println("message = " + rs.getString("message"));
 			}
 			rs.close();
 			conn.close();
@@ -306,7 +321,7 @@ public class SQLiteManager implements IDatabaseManager {
 	}
 
 	@Override
-	public void writeLog(long time, String message) {
+	public void writeLog(long time, String type, String message) {
 		try {
 			Class.forName("org.sqlite.JDBC");
 		} catch (ClassNotFoundException e) {
@@ -319,7 +334,7 @@ public class SQLiteManager implements IDatabaseManager {
 			conn.setAutoCommit(false);
 			Statement stmt = conn.createStatement();
 			
-			String query = "INSERT INTO log VALUES (" + time + ", '" + message + "');";
+			String query = "INSERT INTO log VALUES (" + time + ", '" + type + "', '" + message + "');";
 			System.out.println(query);
 			
 			stmt.executeUpdate(query);
