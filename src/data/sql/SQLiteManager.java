@@ -305,4 +305,29 @@ public class SQLiteManager implements IDatabaseManager {
 		}
 	}
 
+	@Override
+	public void writeLog(long time, String message) {
+		try {
+			Class.forName("org.sqlite.JDBC");
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+		Connection conn;
+		try {
+			conn = DriverManager.getConnection(url, null, null);
+			// 设置自动提交为false
+			conn.setAutoCommit(false);
+			Statement stmt = conn.createStatement();
+			
+			String query = "INSERT INTO log VALUES (" + time + ", '" + message + "');";
+			System.out.println(query);
+			
+			stmt.executeUpdate(query);
+			conn.commit();
+			
+			conn.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
 }
