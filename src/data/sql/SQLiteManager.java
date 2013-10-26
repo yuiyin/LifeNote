@@ -40,7 +40,7 @@ public class SQLiteManager implements IDatabaseManager {
 			if(rsTables.next()){
 				System.out.println("表存在,创建表的事情不要做了");
 			} else {
-				stmt.executeUpdate("CREATE TABLE diary (id,title,tag,time,content,voice,user,share);");
+				stmt.executeUpdate("CREATE TABLE diary (id,title,tag,time,content,voice,user,share,comment);");
 			}
 
 //			stmt.executeUpdate("insert into diary values (123456789, 'title1', '1', 201310102151, './diary/content/123456789', './diary/voice/123456789');");
@@ -72,6 +72,7 @@ public class SQLiteManager implements IDatabaseManager {
 				System.out.println("voice = " + rs.getString("voice"));
 				System.out.println("user = " + rs.getString("user"));
 				System.out.println("share = " + rs.getString("share"));
+				System.out.println("comment = " + rs.getString("comment"));
 			}
 			rs = stmt.executeQuery("SELECT * FROM user;");
 			while (rs.next()) {
@@ -250,7 +251,8 @@ public class SQLiteManager implements IDatabaseManager {
 				String voiceURL = rs.getString("voice");
 				String username = rs.getString("user");
 				String shareOrPrivate = rs.getString("share");
-				ret = new DetailedDiary(id_, title, tag, time, contentURL, voiceURL, username, shareOrPrivate);
+				String comment = rs.getString("comment");
+				ret = new DetailedDiary(id_, title, tag, time, contentURL, voiceURL, username, shareOrPrivate, comment);
 			}
 			rs.close();
 			conn.close();
@@ -289,7 +291,8 @@ public class SQLiteManager implements IDatabaseManager {
 				query += "'" + diary.getContentURL() + "', ";
 				query += "'" + diary.getVoiceURL() + "', ";
 				query += "'" + diary.getUsername() + "', ";
-				query += "'" + diary.getShareOrPrivate() + "');";
+				query += "'" + diary.getShareOrPrivate() + "', ";
+				query += "'" + diary.getComment() + "');";
 				System.out.println(query);
 				
 				stmt.executeUpdate(query);

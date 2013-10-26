@@ -12,6 +12,7 @@ public class DetailedDiary {
 	private String voiceURL;
 	private String username;
 	private String shareOrPrivate;
+	private String comment;
 	
 	public DetailedDiary() {
 		this.id = Utility.generateRandomID();
@@ -22,9 +23,10 @@ public class DetailedDiary {
 		this.voiceURL = "";
 		this.username = DiaryManager.getInstance().getUser().getUsername();
 		this.shareOrPrivate = "private";
+		this.comment = "";
 	}
 	
-	public DetailedDiary(int id, String title, String tag, long time, String content, String voiceURL, String username, String shareOrPrivate) {
+	public DetailedDiary(int id, String title, String tag, long time, String content, String voiceURL, String username, String shareOrPrivate, String comment) {
 		this.id = id;
 		this.title = title;
 		this.tag = tag;
@@ -33,6 +35,7 @@ public class DetailedDiary {
 		this.voiceURL = voiceURL;
 		this.username = username;
 		this.shareOrPrivate = shareOrPrivate;
+		this.comment = comment;
 	}
 
 	public int getId() {
@@ -100,6 +103,14 @@ public class DetailedDiary {
 
 	public void setShareOrPrivate(String shareOrPrivate) {
 		this.shareOrPrivate = shareOrPrivate;
+	}
+
+	public String getComment() {
+		return comment;
+	}
+
+	public void setComment(String comment) {
+		this.comment = comment;
 	}
 
 	public boolean hasVoice() {

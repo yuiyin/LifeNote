@@ -1,5 +1,6 @@
 package gui;
 
+import gui.cuscomp.HintTextField;
 import gui.cusui.CustomScrollBarUI;
 
 import java.awt.Color;
@@ -12,6 +13,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComponent;
@@ -21,6 +23,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -56,6 +59,9 @@ public class DetailFrame extends JFrame implements ActionListener {
 	private JButton bCancel;
 	private JButton bShare;
 	private JButton bPrivate;
+	private JScrollPane spComment;
+	private HintTextField tfComment;
+	private JButton bComment;
 
 	private DetailedDiary dd;
 	private boolean voiceWorking = false;
@@ -98,12 +104,12 @@ public class DetailFrame extends JFrame implements ActionListener {
 		bTime.addActionListener(this);
 
 		lTag = new JLabel("From " + dd.getUsername() + "(" + dd.getShareOrPrivate() + ")    Tag :");
-		lTag.setBounds(101, 135, 259, 26);
+		lTag.setBounds(101, 135, 264, 26);
 		setStyle(lTag);
 		pContainer.add(lTag);
 
 		tfTag = new JTextField(dd.getTag());
-		tfTag.setBounds(360, 135, 140, 26);
+		tfTag.setBounds(365, 135, 135, 26);
 		setStyle(tfTag);
 		pContainer.add(tfTag);
 
@@ -111,7 +117,7 @@ public class DetailFrame extends JFrame implements ActionListener {
 		setStyle(tpContent);
 		setTextPane(dd.getContentURL());
 		spContent = new JScrollPane(tpContent);
-		spContent.setBounds(100, 190, 630, 370);
+		spContent.setBounds(100, 190, 630, 300);
 		spContent.setOpaque(false);
 		spContent.getViewport().setOpaque(false);
 		spContent.setBorder(null);
@@ -173,14 +179,40 @@ public class DetailFrame extends JFrame implements ActionListener {
 		bShare.setBounds(609, 110, 51, 51);
 		setStyle(bShare);
 		bShare.addActionListener(this);
-		pContainer.add(bShare);
 
 		bPrivate = new JButton(new ImageIcon(Utility.DETAIL_FRAME_PRIVATE));
 		bPrivate.setBounds(609, 110, 51, 51);
 		setStyle(bPrivate);
 		bPrivate.addActionListener(this);
-		pContainer.add(bPrivate);
 		
+		JTextArea taComment = new JTextArea(dd.getComment());
+		taComment.setEditable(false);
+		taComment.setFont(new Font(Utility.DETAIL_FRAME_FONT, 0, 16));
+		taComment.setForeground(Utility.DETAIL_FRAME_FONT_COLOR);
+		taComment.setOpaque(false);
+		spComment = new JScrollPane(taComment);
+		spComment.setBounds(100, 495, 630, 40);
+		spComment.setOpaque(false);
+		spComment.getViewport().setOpaque(false);
+		spComment.setBorder(null);
+		spComment.getHorizontalScrollBar().setUI(new CustomScrollBarUI());
+		spComment.getVerticalScrollBar().setUI(new CustomScrollBarUI());
+		pContainer.add(spComment);
+		
+		tfComment = new HintTextField("comment here ...");
+		tfComment.setFont(new Font(Utility.TITLE_CONTENT_FONT, 0, 16));
+		tfComment.setColor(Utility.START_FRAME_FONT_COLOR, Utility.START_FRAME_HINT_COLOR);
+		tfComment.setBorder(BorderFactory.createLineBorder(Utility.START_FRAME_BORDER_COLOR));
+		tfComment.setBounds(100, 540, 500, 20);
+		pContainer.add(tfComment);
+		
+		bComment = new JButton("Comment");
+		bComment.setBounds(610, 540, 120, 20);
+		setStyle(bComment);
+		bComment.setFont(new Font(Utility.DETAIL_FRAME_FONT, 0, 16));
+		bComment.addActionListener(this);
+		pContainer.add(bComment);
+
 		setEditable(editable);
 	}
 
@@ -227,6 +259,10 @@ public class DetailFrame extends JFrame implements ActionListener {
 			} else if (dd.getShareOrPrivate().equals("private")) {
 				pContainer.add(bShare);
 			}
+			pContainer.remove(spComment);
+			pContainer.remove(tfComment);
+			pContainer.remove(bComment);
+			spContent.setBounds(100, 190, 630, 370);
 		} else {
 			pContainer.add(lTime);
 			pContainer.remove(bTime);
@@ -246,6 +282,15 @@ public class DetailFrame extends JFrame implements ActionListener {
 			pContainer.add(bBack);
 			pContainer.remove(bShare);
 			pContainer.remove(bPrivate);
+			if (!dd.getUsername().equals(DiaryManager.getInstance().getUser().getUsername())) {
+				pContainer.remove(bEdit);
+				pContainer.remove(bDelete);
+				bBack.setBounds(850, 80, 40, 40);
+			}
+			pContainer.add(spComment);
+			pContainer.add(tfComment);
+			pContainer.add(bComment);
+			spContent.setBounds(100, 190, 630, 300);
 		}
 		repaint();
 	}
@@ -361,6 +406,11 @@ public class DetailFrame extends JFrame implements ActionListener {
 			pContainer.remove(bPrivate);
 			pContainer.add(bShare);
 			lTag.setText("From " + dd.getUsername() + "(" + dd.getShareOrPrivate() + ")    Tag :");
+		} else if (o == bComment) {
+			String comment = tfComment.getText();
+			comment = DiaryManager.getInstance().getUser().getUsername() + " : " + comment + "\n";
+			dd.setComment(dd.getComment() + comment);
+			DiaryManager.getInstance().saveDiary(dd);
 		}
 		repaint();
 	}
