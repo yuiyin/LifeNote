@@ -155,7 +155,7 @@ public class ListFrame extends JFrame implements ActionListener, Observer{
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == bCreate) {
 			dispose();
-			DetailFrame window = new DetailFrame(new DetailedDiary(), true);
+			DetailFrame window = new DetailFrame(new DetailedDiary(), true, true);
 			window.setVisible(true);
 		} else if (e.getSource() == bSearch) {
 			if (!searching) {
@@ -200,7 +200,7 @@ public class ListFrame extends JFrame implements ActionListener, Observer{
 			SimpleDiary sd = (SimpleDiary) arg;
 			DiaryManager.getInstance().loadDiary(sd.getId());
 			dispose();
-			DetailFrame window = new DetailFrame(DiaryManager.getInstance().getDiary(), false);
+			DetailFrame window = new DetailFrame(DiaryManager.getInstance().getDiary(), false, false);
 			window.setVisible(true);
 		}
 	}

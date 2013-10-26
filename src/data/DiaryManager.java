@@ -106,6 +106,14 @@ public class DiaryManager {
 		detailedDiary = dd;
 		dbManager.setDiary(dd, false);
 	}
+	
+	public void saveCreate(DetailedDiary dd) {
+		saveDiary(dd);
+	}
+	
+	public void saveComment(DetailedDiary dd) {
+		saveDiary(dd);
+	}
 }
 
 //Start a thread to update progress bar

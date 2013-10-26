@@ -65,9 +65,11 @@ public class DetailFrame extends JFrame implements ActionListener {
 
 	private DetailedDiary dd;
 	private boolean voiceWorking = false;
+	private boolean isCreate;
 
-	public DetailFrame(DetailedDiary dd, boolean editable) {
+	public DetailFrame(DetailedDiary dd, boolean editable, boolean isCreate) {
 		this.dd = dd;
+		this.isCreate = isCreate;
 
 		setTitle(Utility.TITLE);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -184,7 +186,7 @@ public class DetailFrame extends JFrame implements ActionListener {
 		bPrivate.setBounds(609, 110, 51, 51);
 		setStyle(bPrivate);
 		bPrivate.addActionListener(this);
-		
+
 		JTextArea taComment = new JTextArea(dd.getComment());
 		taComment.setEditable(false);
 		taComment.setFont(new Font(Utility.DETAIL_FRAME_FONT, 0, 16));
@@ -198,14 +200,14 @@ public class DetailFrame extends JFrame implements ActionListener {
 		spComment.getHorizontalScrollBar().setUI(new CustomScrollBarUI());
 		spComment.getVerticalScrollBar().setUI(new CustomScrollBarUI());
 		pContainer.add(spComment);
-		
+
 		tfComment = new HintTextField("comment here ...");
 		tfComment.setFont(new Font(Utility.TITLE_CONTENT_FONT, 0, 16));
 		tfComment.setColor(Utility.START_FRAME_FONT_COLOR, Utility.START_FRAME_HINT_COLOR);
 		tfComment.setBorder(BorderFactory.createLineBorder(Utility.START_FRAME_BORDER_COLOR));
 		tfComment.setBounds(100, 540, 500, 20);
 		pContainer.add(tfComment);
-		
+
 		bComment = new JButton("Comment");
 		bComment.setBounds(610, 540, 120, 20);
 		setStyle(bComment);
@@ -383,7 +385,11 @@ public class DetailFrame extends JFrame implements ActionListener {
 			dd.setTitle(tfTitle.getText());
 			dd.setTag(tfTag.getText());
 			saveTextPane(dd.getContentURL());
-			DiaryManager.getInstance().saveDiary(dd);
+			if (isCreate) {
+				DiaryManager.getInstance().saveCreate(dd);
+			} else {
+				DiaryManager.getInstance().saveDiary(dd);
+			}
 			refresh(false);
 		} else if (o == bCancel) {
 			DiaryManager.getInstance().loadDiary(dd.getId());
@@ -410,13 +416,12 @@ public class DetailFrame extends JFrame implements ActionListener {
 			String comment = tfComment.getText();
 			comment = DiaryManager.getInstance().getUser().getUsername() + " : " + comment + "\n";
 			dd.setComment(dd.getComment() + comment);
-			DiaryManager.getInstance().saveDiary(dd);
+			DiaryManager.getInstance().saveComment(dd);
 		}
 		repaint();
 	}
 
 	public static void main(String args[]) {
-		DetailFrame f = new DetailFrame(new DetailedDiary(), true);
-		f.setVisible(true);
+
 	}
 }
